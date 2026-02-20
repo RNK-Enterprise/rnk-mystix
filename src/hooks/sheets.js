@@ -40,6 +40,12 @@ export function setupCharacterSheetHooks() {
 
             const points = getAllActorPoints(actor);
 
+            // Non-PC sheets: auto-hide when both points are 0
+            if (actor.type !== 'character' && (points.heroPoints === 0 && points.mysticPoints === 0)) {
+                element.querySelector('.rnk-mystix-sheet-points')?.remove();
+                return;
+            }
+
             // Remove existing to prevent duplication on re-renders
             element.querySelector('.rnk-mystix-sheet-points')?.remove();
 
