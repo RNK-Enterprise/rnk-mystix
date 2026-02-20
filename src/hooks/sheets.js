@@ -1,16 +1,30 @@
 /**
- * Character Sheet Integration
- * Displays point totals on character sheets
+ * Actor Sheet Integration
+ * Displays point totals on all actor sheets: PC, NPC, familiar, vehicle/mount, hazard, loot
  */
 
 import { getAllActorPoints } from '../utils/storageUtils.js';
 
 /**
- * Enhance character sheet with point display
+ * Resolve insertion target for any sheet type.
+ * Appends inside the first <section> of the sheet <header> —
+ * the same position used on PC sheets (header.char-header > section.char-details).
+ */
+function getInsertionTarget(element) {
+    const header = element.querySelector('header');
+    if (header) {
+        const section = header.querySelector('section');
+        if (section) return { target: section, method: 'append' };
+        return { target: header, method: 'append' };
+    }
+    return { target: element, method: 'prepend' };
+}
+
+/**
+ * Enhance all actor sheets with point display
  */
 export function setupCharacterSheetHooks() {
-    // Hook into character sheet rendering
-    Hooks.on('renderActorSheet', (app, html, data) => {
+    Hooks.on('renderActorSheet', (app, html, _data) => {
         try {
             const actor = app.actor;
             if (!actor) return;
@@ -26,25 +40,24 @@ export function setupCharacterSheetHooks() {
             // Remove existing to prevent duplication on re-renders
             element.querySelector('.rnk-mystix-sheet-points')?.remove();
 
-            // Create point display element from string
+            // Build the point display element
             const pointsDisplayStr = createPointsDisplay(points);
             const template = document.createElement('template');
             template.innerHTML = pointsDisplayStr.trim();
             const pointsElement = template.content.firstChild;
 
-            // Target the specific Hero Points dots container on the PF2e sheet
-            const heroPointsContainer = element.querySelector('.dots [data-resource="hero-points"]')?.closest('.dots');
+            // Place the display in the correct position for this sheet type
+            const { target, method } = getInsertionTarget(element);
 
-            if (heroPointsContainer) {
-                heroPointsContainer.after(pointsElement);
+            if (method === 'after') {
+                target.after(pointsElement);
+            } else if (method === 'append') {
+                target.append(pointsElement);
             } else {
-                // Fallback for non-PF2e or customized sheets
-                const headerEl = element.querySelector('.sheet-header');
-                if (headerEl) headerEl.after(pointsElement);
-                else element.prepend(pointsElement);
+                target.prepend(pointsElement);
             }
         } catch (error) {
-            console.warn('RNK Mystix | Error enhancing character sheet:', error);
+            console.warn('RNK Mystix | Error enhancing actor sheet:', error);
         }
     });
 }
@@ -66,16 +79,19 @@ function createPointsDisplay(points) {
  * Update point display on actor update
  */
 export function setupActorUpdateHooks() {
-    Hooks.on('updateActor', (actor, data, options, userId) => {
+    Hooks.on('updateActor', (actor, _data, _options, _userId) => {
         try {
-            // Re-render any open character sheets for this actor
+            // Re-render any open sheets for this actor
             const apps = Object.values(ui.windows);
             for (const app of apps) {
                 if (app.actor?.id === actor.id) {
-                    // ApplicationV2 uses render({force: false}) by default, 
-                    // legacy Application uses render(false)
                     if (app.render instanceof Function) {
-                        if (app.constructor.name.includes('V2') || app.options?.id?.includes('v2')) {
+                        // Use instanceof for reliable ApplicationV2 detection
+                        const isV2 = typeof foundry !== 'undefined'
+                            && foundry.applications?.api?.ApplicationV2
+                            && app instanceof foundry.applications.api.ApplicationV2;
+
+                        if (isV2) {
                             app.render({ force: false });
                         } else {
                             app.render(false);
@@ -90,11 +106,11 @@ export function setupActorUpdateHooks() {
 }
 
 /**
- * Initialize character sheet integration
+ * Initialize all actor sheet integration
  */
 export function initializeCharacterSheets() {
-    console.log('RNK Mystix | Initializing character sheet integration...');
+    console.log('RNK Mystix | Initializing actor sheet integration...');
     setupCharacterSheetHooks();
     setupActorUpdateHooks();
-    console.log('RNK Mystix | Character sheet integration ready');
+    console.log('RNK Mystix | Actor sheet integration ready');
 }

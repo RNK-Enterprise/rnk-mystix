@@ -7,19 +7,20 @@
       "name": "Odinn (RNK Enterprise)"
     }
   ],
-  "version": "1.0.1",
+  "version": "1.0.2",
   "compatibility": {
     "minimum": 13,
     "verified": 13
   },
   "esmodules": ["src/main.js"],
   "styles": ["styles/mystix.css"],
-  "languages": {
-    "en": {
+  "languages": [
+    {
+      "lang": "en",
       "name": "English",
       "path": "languages/en.json"
     }
-  },
+  ],
   "url": "https://github.com/RNK-Enterprise/rnk-mystix",
   "manifest": "https://github.com/RNK-Enterprise/rnk-mystix/releases/latest/download/module.json",
   "download": "https://github.com/RNK-Enterprise/rnk-mystix/releases/latest/download/rnk-mystix.zip",
