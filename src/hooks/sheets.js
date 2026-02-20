@@ -90,12 +90,12 @@ function attachPointListeners(pointsElement, actor) {
 
         span.addEventListener('click', async (e) => {
             e.preventDefault();
-            await deductActorPoints(actor, type, 1);
+            await addActorPoints(actor, type, 1);
         });
 
         span.addEventListener('contextmenu', async (e) => {
             e.preventDefault();
-            await addActorPoints(actor, type, 1);
+            await deductActorPoints(actor, type, 1);
         });
     }
 }
