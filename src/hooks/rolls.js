@@ -4,6 +4,7 @@
  */
 
 import { getAllActorPoints, deductActorPoints } from '../utils/storageUtils.js';
+import { getMysticProfBonus } from '../utils/pointUtils.js';
 
 /**
  * Initialize all roll hooks
@@ -11,8 +12,8 @@ import { getAllActorPoints, deductActorPoints } from '../utils/storageUtils.js';
 export function initializeRollSystem() {
     console.log('RNK Mystix | Initializing roll system...');
 
-    // Hook into chat message rendering to add our points display
-    Hooks.on('renderChatMessage', async (message, html, data) => {
+    // renderChatMessageHTML is the v13 API — passes HTMLElement directly (not jQuery)
+    Hooks.on('renderChatMessageHTML', async (message, element, _data) => {
         try {
             const actor = message.actor;
             if (!actor) return;
@@ -22,80 +23,96 @@ export function initializeRollSystem() {
             if (!isRoll) return;
 
             const points = getAllActorPoints(actor);
-            
-            // Create the points template data
+
+            // Skip rendering if both points are 0
+            if (points.heroPoints === 0 && points.mysticPoints === 0) return;
+
+            const level = actor.level ?? actor.system?.details?.level?.value ?? 0;
+
+            // Create the points template data — M shows the calculated total bonus
             const templateData = {
                 actorId: actor.id,
-                actorName: actor.name,
                 heroPoints: points.heroPoints,
-                mysticPoints: points.mysticPoints
+                mysticPoints: points.mysticPoints + getMysticProfBonus(level)
             };
 
-            // Render the template
-            const content = await renderTemplate('modules/rnk-mystix/templates/chat-points.hbs', templateData);
-            
-            // Append to the chat card
-            const element = html instanceof HTMLElement ? html : html[0];
+            // renderTemplate is now namespaced in v13
+            const content = await foundry.applications.handlebars.renderTemplate(
+                'modules/rnk-mystix/templates/chat-points.hbs',
+                templateData
+            );
+
+            // Append to the chat card — remove any existing display first to prevent duplicates
+            element.querySelector('.rnk-mystix-chat-points')?.remove();
             const diceRoll = element.querySelector('.dice-roll') || element.querySelector('.card-content');
-            
+
             if (diceRoll) {
                 diceRoll.after(foundry.utils.parseHTML(content));
             } else {
                 element.appendChild(foundry.utils.parseHTML(content));
             }
 
-            // Attach listeners to the buttons
-            element.querySelectorAll('.rnk-mystix-chat-roll-btn').forEach(btn => {
-                btn.addEventListener('click', async (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    
-                    const type = btn.dataset.type;
-                    const actorId = actor.id;
-                    const actorInstance = game.actors.get(actorId);
-                    
-                    if (!actorInstance) return;
-                    
-                    // Check ownership
-                    if (!actorInstance.isOwner) {
-                        ui.notifications.warn("You do not own this character.");
-                        return;
-                    }
-
-                    const currentPoints = getAllActorPoints(actorInstance);
-                    const pointValue = type === 'hero' ? currentPoints.heroPoints : currentPoints.mysticPoints;
-
-                    if (pointValue <= 0) {
-                        ui.notifications.warn(`You have no ${type === 'hero' ? 'Hero' : 'Mystic'} Points left!`);
-                        return;
-                    }
-
-                    // Spend the point
-                    await deductActorPoints(actorInstance, type, 1);
-                    ui.notifications.info(`Spent 1 ${type === 'hero' ? 'Hero' : 'Mystic'} Point`);
-
-                    // Both Hero and Mystic Points now cause a reroll if it was a d20 roll
-                    if (message.isRoll) {
-                        await handlePointReroll(actorInstance, message, type);
-                    } else {
-                        // Generic spending if no roll is attached
-                        await ChatMessage.create({
-                            user: game.user.id,
-                            speaker: ChatMessage.getSpeaker({ actor: actorInstance }),
-                            content: `
-                                <div class="rnk-mystix-spend-msg">
-                                    <h3 style="color: ${type === 'hero' ? 'var(--mystix-hero-color)' : 'var(--mystix-mystic-color)'}">
-                                        ${type === 'hero' ? 'Hero' : 'Mystic'} Point Spent!
-                                    </h3>
-                                    <p>${actorInstance.name} triggers a powerful effect!</p>
-                                </div>
-                            `
-                        });
-                    }
-                });
-            });
+            // NOTE: No per-element listeners added here.
+            // A single delegated listener on document (registered below) handles all clicks.
         } catch (error) {
             console.error('RNK Mystix | Error rendering chat points:', error);
+        }
+    });
+
+    // Single delegated click handler — registered ONCE at init, covers all chat point buttons
+    // past and future. Eliminates the duplicate-listener problem caused by the hook firing
+    // multiple times per message render.
+    document.addEventListener('click', async (e) => {
+        const btn = e.target.closest('.rnk-mystix-chat-roll-btn');
+        if (!btn) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Look up the message from the chat element's data-message-id attribute
+        const messageId = btn.closest('[data-message-id]')?.dataset.messageId;
+        if (!messageId) return;
+
+        const message = game.messages.get(messageId);
+        if (!message) return;
+
+        // message.actor resolves synthetic/token actors correctly via speaker data
+        const actor = message.actor;
+        if (!actor) return;
+
+        const type = btn.dataset.type;
+
+        if (!actor.isOwner) {
+            ui.notifications.warn('You do not own this character.');
+            return;
+        }
+
+        const currentPoints = getAllActorPoints(actor);
+        const pointValue = type === 'hero' ? currentPoints.heroPoints : currentPoints.mysticPoints;
+
+        if (pointValue <= 0) {
+            ui.notifications.warn(`You have no ${type === 'hero' ? 'Hero' : 'Mystic'} Points left!`);
+            return;
+        }
+
+        await deductActorPoints(actor, type, 1);
+        ui.notifications.info(`Spent 1 ${type === 'hero' ? 'Hero' : 'Mystic'} Point`);
+
+        if (message.isRoll) {
+            await handlePointReroll(actor, message, type);
+        } else {
+            await ChatMessage.create({
+                user: game.user.id,
+                speaker: ChatMessage.getSpeaker({ actor }),
+                content: `
+                    <div class="rnk-mystix-spend-msg">
+                        <h3 style="color: ${type === 'hero' ? 'var(--mystix-hero-color)' : 'var(--mystix-mystic-color)'}">
+                            ${type === 'hero' ? 'Hero' : 'Mystic'} Point Spent!
+                        </h3>
+                        <p>${actor.name} triggers a powerful effect!</p>
+                    </div>
+                `
+            });
         }
     });
 
@@ -104,17 +121,21 @@ export function initializeRollSystem() {
 
 /**
  * Handle Point-based Reroll (Hero or Mystic)
- * @param {Actor} actor 
- * @param {ChatMessage} originalMessage 
+ * @param {Actor} actor
+ * @param {ChatMessage} originalMessage
  * @param {string} type - 'hero' or 'mystic'
  */
 async function handlePointReroll(actor, originalMessage, type) {
     const roll = originalMessage.rolls[0];
     if (!roll) return;
 
-    // Create a new roll that is a reroll of the original
-    const newRoll = await new Roll(roll.formula).roll();
-    
+    // Create a new roll — mystic rerolls include the proficiency bonus (10 + level)
+    const level = actor.level ?? actor.system?.details?.level?.value ?? 0;
+    const formula = type === 'mystic'
+        ? `${roll.formula} + ${getMysticProfBonus(level)}`
+        : roll.formula;
+    const newRoll = await new Roll(formula).roll();
+
     // Determine theme colors based on point type
     const color = type === 'hero' ? 'var(--mystix-hero-color)' : 'var(--mystix-mystic-color)';
     const label = type === 'hero' ? 'Hero Point' : 'Mystic Point';
@@ -126,7 +147,7 @@ async function handlePointReroll(actor, originalMessage, type) {
             <div class="rnk-mystix-reroll-flavor" style="color: ${color}; font-weight: bold; border-bottom: 2px solid ${color}; padding-bottom: 2px;">
                 <i class="fas fa-dice-d20"></i> Spent ${label} to Reroll!
             </div>`,
-        type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+        type: 'roll',
         rolls: [newRoll],
         flags: {
             "rnk-mystix": {

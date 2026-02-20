@@ -26,13 +26,24 @@ export function getHeroPointBonus(heroPoints) {
 }
 
 /**
- * Calculate Mystic Point bonus
+ * Calculate Mystic Point bonus including proficiency (10 + level)
  * @param {number} mysticPoints - Current Mystic Points
- * @returns {number} Bonus value
+ * @param {number} level - Actor level
+ * @returns {number} Bonus value (mysticPoints + 10 + level)
  */
-export function getMysticPointBonus(mysticPoints) {
-    // Mystic Points: direct numeric bonus
-    return Math.max(0, mysticPoints || 0);
+export function getMysticPointBonus(mysticPoints, level) {
+    const mp = Math.max(0, mysticPoints || 0);
+    const lvl = Math.max(0, level || 0);
+    return mp + 10 + lvl;
+}
+
+/**
+ * Get the proficiency component of the Mystic bonus (10 + level)
+ * @param {number} level - Actor level
+ * @returns {number}
+ */
+export function getMysticProfBonus(level) {
+    return 10 + Math.max(0, level || 0);
 }
 
 /**

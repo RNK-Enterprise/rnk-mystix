@@ -4,6 +4,7 @@
  */
 
 import { getAllActorPoints, addActorPoints, deductActorPoints } from '../utils/storageUtils.js';
+import { getMysticProfBonus } from '../utils/pointUtils.js';
 
 /**
  * Resolve insertion target for any sheet type.
@@ -49,7 +50,7 @@ export function setupCharacterSheetHooks() {
             element.querySelector('.rnk-mystix-sheet-points')?.remove();
 
             // Build the point display element
-            const pointsDisplayStr = createPointsDisplay(points);
+            const pointsDisplayStr = createPointsDisplay(points, actor);
             const template = document.createElement('template');
             template.innerHTML = pointsDisplayStr.trim();
             const pointsElement = template.content.firstChild;
@@ -100,15 +101,19 @@ function attachPointListeners(pointsElement, actor) {
 }
 
 /**
- * Create HTML for point display
+ * Create HTML for point display.
+ * H shows the raw hero point count.
+ * M shows the total mystic bonus: mysticPoints + (10 + level).
  */
-function createPointsDisplay(points) {
+function createPointsDisplay(points, actor) {
     const heroPoints = points.heroPoints || 0;
     const mysticPoints = points.mysticPoints || 0;
+    const level = actor?.level ?? actor?.system?.details?.level?.value ?? 0;
+    const mysticTotal = mysticPoints + getMysticProfBonus(level);
 
     return `<div class="rnk-mystix-sheet-points">
         <span class="rnk-mystix-sheet-point hero"><strong>H:</strong> ${heroPoints}</span>
-        <span class="rnk-mystix-sheet-point mystic"><strong>M:</strong> ${mysticPoints}</span>
+        <span class="rnk-mystix-sheet-point mystic"><strong>M:</strong> ${mysticTotal}</span>
     </div>`;
 }
 
