@@ -4,7 +4,6 @@
  */
 
 import { getAllActorPoints, addActorPoints, deductActorPoints } from '../utils/storageUtils.js';
-import { getMysticProfBonus } from '../utils/pointUtils.js';
 
 /**
  * Resolve insertion target for any sheet type.
@@ -39,18 +38,13 @@ export function setupCharacterSheetHooks() {
             const element = html instanceof HTMLElement ? html : html[0];
             if (!element) return;
 
-            // Get current points — hide display entirely when both are 0
             const points = getAllActorPoints(actor);
-            if (!points || (points.heroPoints === 0 && points.mysticPoints === 0)) {
-                element.querySelector('.rnk-mystix-sheet-points')?.remove();
-                return;
-            }
 
             // Remove existing to prevent duplication on re-renders
             element.querySelector('.rnk-mystix-sheet-points')?.remove();
 
             // Build the point display element
-            const pointsDisplayStr = createPointsDisplay(points, actor);
+            const pointsDisplayStr = createPointsDisplay(points);
             const template = document.createElement('template');
             template.innerHTML = pointsDisplayStr.trim();
             const pointsElement = template.content.firstChild;
@@ -103,17 +97,15 @@ function attachPointListeners(pointsElement, actor) {
 /**
  * Create HTML for point display.
  * H shows the raw hero point count.
- * M shows the total mystic bonus: mysticPoints + (10 + level).
+ * M shows the raw mystic point count.
  */
-function createPointsDisplay(points, actor) {
+function createPointsDisplay(points) {
     const heroPoints = points.heroPoints || 0;
     const mysticPoints = points.mysticPoints || 0;
-    const level = actor?.level ?? actor?.system?.details?.level?.value ?? 0;
-    const mysticTotal = mysticPoints + getMysticProfBonus(level);
 
     return `<div class="rnk-mystix-sheet-points">
         <span class="rnk-mystix-sheet-point hero"><strong>H:</strong> ${heroPoints}</span>
-        <span class="rnk-mystix-sheet-point mystic"><strong>M:</strong> ${mysticTotal}</span>
+        <span class="rnk-mystix-sheet-point mystic"><strong>M:</strong> ${mysticPoints}</span>
     </div>`;
 }
 

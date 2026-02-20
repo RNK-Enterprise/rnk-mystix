@@ -45,11 +45,10 @@ export function initializeRollSystem() {
 
             if (!showHero && !showMystic) return;
 
-            const level = actor.level ?? actor.system?.details?.level?.value ?? 0;
             const templateData = {
                 actorId: actor.id,
                 heroPoints: points.heroPoints,
-                mysticPoints: points.mysticPoints + getMysticProfBonus(level),
+                mysticPoints: points.mysticPoints,
                 showHero,
                 showMystic
             };
