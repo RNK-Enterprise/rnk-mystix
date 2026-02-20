@@ -15,7 +15,9 @@ export function initializeRollSystem() {
     // renderChatMessageHTML is the v13 API — passes HTMLElement directly (not jQuery)
     Hooks.on('renderChatMessageHTML', async (message, element, _data) => {
         try {
-            const actor = message.actor;
+            // Always use the world actor — that is where the Hub stores flags.
+            // message.actor can return a synthetic token actor that has no RNK flags.
+            const actor = game.actors.get(message.speaker?.actor) ?? message.actor;
             if (!actor) return;
 
             // Only show for relevant roll types (attacks, saves, skills)
@@ -27,13 +29,11 @@ export function initializeRollSystem() {
             // Skip rendering if both points are 0
             if (points.heroPoints === 0 && points.mysticPoints === 0) return;
 
-            const level = actor.level ?? actor.system?.details?.level?.value ?? 0;
-
-            // Create the points template data — M shows the calculated total bonus
+            // Create the points template data — M shows raw count (profBonus is added on reroll)
             const templateData = {
                 actorId: actor.id,
                 heroPoints: points.heroPoints,
-                mysticPoints: points.mysticPoints + getMysticProfBonus(level)
+                mysticPoints: points.mysticPoints
             };
 
             // renderTemplate is now namespaced in v13
@@ -76,8 +76,8 @@ export function initializeRollSystem() {
         const message = game.messages.get(messageId);
         if (!message) return;
 
-        // message.actor resolves synthetic/token actors correctly via speaker data
-        const actor = message.actor;
+        // Use world actor — same document the Hub stores flags on
+        const actor = game.actors.get(message.speaker?.actor) ?? message.actor;
         if (!actor) return;
 
         const type = btn.dataset.type;
@@ -126,11 +126,13 @@ export function initializeRollSystem() {
  * @param {string} type - 'hero' or 'mystic'
  */
 async function handlePointReroll(actor, originalMessage, type) {
+    // Ensure we operate on the world actor (flags live there)
+    const worldActor = game.actors.get(originalMessage.speaker?.actor) ?? actor;
     const roll = originalMessage.rolls[0];
     if (!roll) return;
 
     // Create a new roll — mystic rerolls include the proficiency bonus (10 + level)
-    const level = actor.level ?? actor.system?.details?.level?.value ?? 0;
+    const level = worldActor.level ?? worldActor.system?.details?.level?.value ?? 0;
     const formula = type === 'mystic'
         ? `${roll.formula} + ${getMysticProfBonus(level)}`
         : roll.formula;
@@ -142,12 +144,11 @@ async function handlePointReroll(actor, originalMessage, type) {
 
     await ChatMessage.create({
         user: game.user.id,
-        speaker: ChatMessage.getSpeaker({ actor: actor }),
+        speaker: ChatMessage.getSpeaker({ actor: worldActor }),
         flavor: `
             <div class="rnk-mystix-reroll-flavor" style="color: ${color}; font-weight: bold; border-bottom: 2px solid ${color}; padding-bottom: 2px;">
                 <i class="fas fa-dice-d20"></i> Spent ${label} to Reroll!
             </div>`,
-        type: 'roll',
         rolls: [newRoll],
         flags: {
             "rnk-mystix": {
