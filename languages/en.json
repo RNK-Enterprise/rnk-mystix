@@ -1,0 +1,56 @@
+{
+  "rnk-mystix": {
+    "name": "RNK Mystix",
+    "description": "Hero Points and Mystic Points Management",
+    "settings": {
+      "maxHeroPoints": {
+        "name": "Maximum Hero Points",
+        "hint": "Maximum Hero Points that can be assigned to an actor"
+      },
+      "maxMysticPoints": {
+        "name": "Maximum Mystic Points",
+        "hint": "Maximum Mystic Points that can be assigned to an actor"
+      },
+      "defaultHeroPoints": {
+        "name": "Default Hero Points",
+        "hint": "Default number of Hero Points to assign when creating new assignments"
+      },
+      "defaultMysticPoints": {
+        "name": "Default Mystic Points",
+        "hint": "Default number of Mystic Points to assign when creating new assignments"
+      },
+      "allowNegativePoints": {
+        "name": "Allow Negative Points",
+        "hint": "Allow actors to have negative point values (debt system)"
+      },
+      "autoRefillPoints": {
+        "name": "Auto-Refill on Rest",
+        "hint": "Automatically reset points when actors rest"
+      }
+    },
+    "hub": {
+      "title": "RNK Mystix - Point Assignment",
+      "search": "Search actors by name...",
+      "heroPoints": "Hero Points",
+      "mysticPoints": "Mystic Points",
+      "assign": "Assign",
+      "clear": "Clear",
+      "reset": "Reset",
+      "resetAll": "Reset All Points",
+      "pcs": "Player Characters",
+      "npcs": "NPCs",
+      "mystics": "Mystics",
+      "noActors": "No actors found",
+      "pointsAssigned": "Points assigned successfully",
+      "pointsCleared": "Points cleared",
+      "pointsReset": "Points reset",
+      "allPointsReset": "All points reset"
+    },
+    "rolls": {
+      "heroBonus": "Hero Point Bonus",
+      "mysticBonus": "Mystic Point Bonus",
+      "combinedBonus": "Combined Point Bonus",
+      "rollBreakdown": "Roll Breakdown"
+    }
+  }
+}

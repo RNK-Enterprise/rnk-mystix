@@ -1,0 +1,649 @@
+/* ============================================
+   RNK Mystix - Stylesheet
+   Hero Points and Mystic Points Management
+   ============================================ */
+
+/* Color Scheme */
+:root {
+    --mystix-hero-color: #d4af37;      /* Gold */
+    --mystix-hero-light: #f4df57;      /* Light Gold */
+    --mystix-hero-dark: #b8960f;       /* Dark Gold */
+    --mystix-mystic-color: #9b59b6;    /* Purple */
+    --mystix-mystic-light: #b876d6;    /* Light Purple */
+    --mystix-mystic-dark: #6c3a6f;     /* Dark Purple */
+    --mystix-bg: #0f1a2e;              /* Dark Blue Background */
+    --mystix-bg-alt: #1a2540;          /* Alt Blue Background */
+    --mystix-border: #2d3e54;          /* Blue Border */
+    --mystix-text: #e0e0e0;            /* Light Gray Text */
+    --mystix-text-dark: #ffffff;       /* White Text */
+    --mystix-accent: #e74c3c;          /* Red Accent */
+}
+
+/* ============================================
+   Main Hub Application Window
+   ============================================ */
+
+.window-app.rnk-mystix-hub {
+    background: var(--mystix-bg);
+    border: 2px solid var(--mystix-border);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.window-app.rnk-mystix-hub .window-header {
+    background: linear-gradient(135deg, #2d3e54 0%, #1a2540 100%);
+    color: var(--mystix-text-dark);
+    border-bottom: 2px solid var(--mystix-border);
+    padding: 0;
+    font-weight: bold;
+}
+
+.window-app.rnk-mystix-hub .window-header h4 {
+    color: var(--mystix-text-dark);
+    margin: 0;
+    font-size: 16px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.rnk-mystix-hub-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    background: var(--mystix-bg);
+    color: var(--mystix-text);
+}
+
+/* ============================================
+   Header Section
+   ============================================ */
+
+.rnk-mystix-header {
+    padding: 0;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid var(--mystix-border);
+    background: linear-gradient(to right, rgba(45, 62, 84, 0.4), rgba(26, 37, 64, 0.4));
+}
+
+.rnk-mystix-header h2 {
+    margin: 0 0 5px 0;
+    color: var(--mystix-text-dark);
+    font-size: 18px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.rnk-mystix-header p {
+    margin: 0;
+    color: var(--mystix-text);
+    font-size: 12px;
+    opacity: 0.9;
+}
+
+/* ============================================
+   Controls Section
+   ============================================ */
+
+.rnk-mystix-controls {
+    padding: 0;
+    min-height: 35px;
+    border-bottom: 1px solid var(--mystix-border);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.rnk-mystix-search-box {
+    flex: 1;
+}
+
+.rnk-mystix-search {
+    width: 100%;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--mystix-border);
+    border-radius: 4px;
+    color: var(--mystix-text);
+    font-size: 13px;
+}
+
+.rnk-mystix-search::placeholder {
+    color: rgba(224, 224, 224, 0.5);
+}
+
+.rnk-mystix-search:focus {
+    outline: none;
+    border-color: var(--mystix-hero-color);
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
+}
+
+.rnk-mystix-reset-all-btn {
+    padding: 0;
+    background: linear-gradient(135deg, var(--mystix-accent), #c0392b);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.rnk-mystix-reset-all-btn:hover {
+    background: linear-gradient(135deg, #ec7063, var(--mystix-accent));
+    box-shadow: 0 0 12px rgba(231, 76, 60, 0.6);
+    transform: translateY(-1px);
+}
+
+.rnk-mystix-reset-all-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 0 6px rgba(155, 89, 182, 0.4);
+}
+
+/* ============================================
+   Content Area
+   ============================================ */
+
+.rnk-mystix-content {
+    overflow-y: auto;
+    padding: 0;
+    background: var(--mystix-bg);
+}
+
+.rnk-mystix-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.rnk-mystix-content::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+}
+
+.rnk-mystix-content::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--mystix-hero-color), var(--mystix-mystic-color));
+    border-radius: 4px;
+}
+
+.rnk-mystix-content::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, var(--mystix-hero-light), var(--mystix-mystic-light));
+}
+
+/* ============================================
+   Grouped Actors View
+   ============================================ */
+
+.rnk-mystix-group {
+    margin-bottom: 15px;
+}
+
+.rnk-mystix-group:last-child {
+    margin-bottom: 0;
+}
+
+.rnk-mystix-group-header {
+    margin: 10px 0 8px 0;
+    padding: 0;
+    background: rgba(45, 62, 84, 0.3);
+    border-left: 3px solid var(--mystix-accent);
+    color: var(--mystix-accent);
+    font-size: 13px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ============================================
+   Actor Row
+   ============================================ */
+
+.rnk-mystix-actor-row {
+    display: grid;
+    grid-template-columns: 1fr 200px 130px;
+    gap: 10px;
+    align-items: center;
+    padding: 0;
+    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--mystix-border);
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.rnk-mystix-actor-row:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--mystix-accent);
+    box-shadow: 0 0 8px rgba(231, 76, 60, 0.3);
+}
+
+.rnk-mystix-actor-row.selected {
+    background: rgba(231, 76, 60, 0.1);
+    border-color: var(--mystix-accent);
+}
+
+/* ============================================
+   Actor Info
+   ============================================ */
+
+.rnk-mystix-actor-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.rnk-mystix-actor-name {
+    color: var(--mystix-text);
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.rnk-mystix-actor-type {
+    color: rgba(224, 224, 224, 0.6);
+    font-size: 11px;
+    text-transform: capitalize;
+}
+
+/* ============================================
+   Point Inputs
+   ============================================ */
+
+.rnk-mystix-point-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.rnk-mystix-point-group {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.rnk-mystix-point-group label {
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.rnk-mystix-point-group.hero label {
+    color: var(--mystix-hero-color);
+}
+
+.rnk-mystix-point-group.mystic label {
+    color: var(--mystix-mystic-color);
+}
+
+.rnk-mystix-point-group input {
+    padding: 0;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--mystix-border);
+    border-radius: 3px;
+    color: var(--mystix-text);
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.rnk-mystix-point-group input:focus {
+    outline: none;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.rnk-mystix-point-group.hero input:focus {
+    border-color: var(--mystix-hero-color);
+    box-shadow: 0 0 6px rgba(212, 175, 55, 0.3);
+}
+
+.rnk-mystix-point-group.mystic input:focus {
+    border-color: var(--mystix-mystic-color);
+    box-shadow: 0 0 6px rgba(155, 89, 182, 0.3);
+}
+
+/* Disabled input */
+.rnk-mystix-point-group input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ============================================
+   Action Buttons
+   ============================================ */
+
+.rnk-mystix-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.rnk-mystix-assign-btn,
+.rnk-mystix-clear-btn,
+.rnk-mystix-reset-btn {
+    flex: 1;
+    padding: 0;
+    border: none;
+    border-radius: 3px;
+    color: white;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.rnk-mystix-assign-btn {
+    background: linear-gradient(135deg, var(--mystix-hero-color), var(--mystix-hero-dark));
+}
+
+.rnk-mystix-assign-btn:hover {
+    background: linear-gradient(135deg, var(--mystix-hero-light), var(--mystix-hero-color));
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+    transform: translateY(-1px);
+}
+
+.rnk-mystix-clear-btn {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+.rnk-mystix-clear-btn:hover {
+    background: linear-gradient(135deg, #ec7063, #e74c3c);
+    box-shadow: 0 0 8px rgba(231, 76, 60, 0.5);
+    transform: translateY(-1px);
+}
+
+.rnk-mystix-reset-btn {
+    background: linear-gradient(135deg, var(--mystix-mystic-color), var(--mystix-mystic-dark));
+}
+
+.rnk-mystix-reset-btn:hover {
+    background: linear-gradient(135deg, var(--mystix-mystic-light), var(--mystix-mystic-color));
+    box-shadow: 0 0 8px rgba(155, 89, 182, 0.5);
+    transform: translateY(-1px);
+}
+
+.rnk-mystix-assign-btn:active,
+.rnk-mystix-clear-btn:active,
+.rnk-mystix-reset-btn:active {
+    transform: translateY(0);
+    box-shadow: none;
+    opacity: 0.9;
+}
+
+/* ============================================
+   Empty States
+   ============================================ */
+
+.rnk-mystix-no-results {
+    padding: 0;
+    text-align: center;
+    color: rgba(224, 224, 224, 0.5);
+    font-style: italic;
+}
+
+/* ============================================
+   Roll Message Breakdown
+   ============================================ */
+
+.rnk-mystix-roll-info {
+    margin-top: 10px;
+    padding: 0;
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid var(--mystix-hero-color);
+    border-radius: 4px;
+}
+
+.rnk-mystix-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 13px;
+}
+
+.breakdown-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0;
+    color: var(--mystix-text);
+}
+
+.breakdown-item.hero-bonus {
+    color: var(--mystix-hero-light);
+    font-weight: bold;
+}
+
+.breakdown-item.mystic-bonus {
+    color: var(--mystix-mystic-light);
+    font-weight: bold;
+}
+
+.breakdown-total {
+    padding: 0;
+    border-top: 1px solid rgba(212, 175, 55, 0.3);
+    color: var(--mystix-hero-light);
+    font-weight: bold;
+}
+
+.breakdown-final {
+    padding: 0;
+    color: var(--mystix-hero-light);
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+
+@media (max-width: 800px) {
+    .rnk-mystix-actor-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .rnk-mystix-point-inputs {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .rnk-mystix-actions {
+        grid-column: 1 / -1;
+    }
+
+    .rnk-mystix-controls {
+        flex-direction: column;
+    }
+}
+
+/* ============================================
+   Animation & Transitions
+   ============================================ */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.rnk-mystix-actor-row {
+    animation: fadeIn 0.3s ease;
+}
+
+/* Print Styles */
+@media print {
+    .rnk-mystix-actions,
+    .rnk-mystix-controls {
+        display: none;
+    }
+
+    .rnk-mystix-actor-row {
+        border: 1px solid black;
+        break-inside: avoid;
+    }
+}
+
+/* ============================================
+   Character Sheet Integration
+   ============================================ */
+
+.rnk-mystix-sheet-points {
+    display: flex;
+    gap: 12px;
+    padding: 0;
+    margin: -2px 0 5px 4px; /* Slightly adjusted for larger size */
+    background: none;
+    border: none;
+    font-size: 20px; /* Doubled size */
+    line-height: 1;
+    z-index: 5;
+    pointer-events: none;
+    text-shadow: 2px 2px 3px black; /* Enhanced shadow for larger text */
+}
+
+.rnk-mystix-sheet-point {
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.rnk-mystix-sheet-point.hero {
+    color: var(--mystix-hero-color);
+}
+
+.rnk-mystix-sheet-point.mystic {
+    color: var(--mystix-mystic-color);
+}
+
+.rnk-mystix-sheet-point strong {
+    font-size: 18px; /* Doubled size for labels */
+    opacity: 0.9;
+}
+
+/* ============================================
+   Chat Message Points Display
+   ============================================ */
+
+.rnk-mystix-points-display {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+    padding: 8px 0;
+    border-top: 1px solid var(--mystix-border);
+    font-size: 13px;
+}
+
+.rnk-mystix-point-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.rnk-mystix-point-item.hero {
+    color: var(--mystix-hero-color);
+    font-weight: bold;
+}
+
+.rnk-mystix-point-item.mystic {
+    color: var(--mystix-mystic-color);
+    font-weight: bold;
+}
+
+.rnk-mystix-point-item small {
+    opacity: 0.8;
+    font-weight: normal;
+}
+
+/* ============================================
+   Roll Chat Card Point Display
+   ============================================ */
+
+.rnk-mystix-chat-points {
+    margin-top: 8px;
+    padding: 6px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--mystix-border);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.rnk-mystix-chat-points-header {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--mystix-text);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 4px;
+    padding-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.rnk-mystix-chat-points-body {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+}
+
+.rnk-mystix-chat-roll-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+    font-size: 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    padding: 2px 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-shadow: 1px 1px 2px black;
+    color: var(--mystix-text);
+    flex: 1;
+    justify-content: center;
+}
+
+.rnk-mystix-chat-roll-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.rnk-mystix-chat-roll-btn.hero {
+    color: var(--mystix-hero-color);
+}
+
+.rnk-mystix-chat-roll-btn.hero:hover {
+    border-color: var(--mystix-hero-color);
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
+}
+
+.rnk-mystix-chat-roll-btn.mystic {
+    color: var(--mystix-mystic-color);
+}
+
+.rnk-mystix-chat-roll-btn.mystic:hover {
+    border-color: var(--mystix-mystic-color);
+    box-shadow: 0 0 8px rgba(155, 89, 182, 0.3);
+}
+
+.rnk-mystix-chat-roll-btn .label {
+    font-size: 11px;
+    opacity: 0.8;
+}
+
+.rnk-mystix-spend-msg h3 {
+    margin: 0 0 5px 0;
+    font-family: 'Sentinel', serif;
+    text-align: center;
+}
+
+.rnk-mystix-spend-msg p {
+    margin: 0;
+    text-align: center;
+    font-style: italic;
+}
