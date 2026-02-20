@@ -30,10 +30,15 @@ export function initializeRollSystem() {
             if (points.heroPoints === 0 && points.mysticPoints === 0) return;
 
             // Determine which buttons to show based on PF2e roll context.
-            // Mystic (Rewrite Fate): skill checks and saving throws only.
+            // Mystic (Rewrite Fate): skill checks and saving throws by default.
+            // Attack rolls allowed if the mysticAttackRerolls setting is enabled.
             // Hero: any roll.
             const rollType = message.flags?.pf2e?.context?.type ?? '';
-            const mysticEligible = ['skill-check', 'saving-throw'].includes(rollType);
+            const allowedTypes = ['skill-check', 'saving-throw'];
+            if (game.settings.get('rnk-mystix', 'mysticAttackRerolls')) {
+                allowedTypes.push('attack-roll');
+            }
+            const mysticEligible = allowedTypes.includes(rollType);
 
             const showHero = points.heroPoints > 0;
             const showMystic = mysticEligible && points.mysticPoints > 0;

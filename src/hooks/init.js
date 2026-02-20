@@ -54,6 +54,16 @@ export function registerSettings() {
         default: false
     });
 
+    // Allow Mystic Points to reroll attacks
+    game.settings.register('rnk-mystix', 'mysticAttackRerolls', {
+        name: 'Mystic Attack Rerolls',
+        hint: 'Allow Mystic Points (Rewrite Fate) to reroll attack rolls in addition to skill checks and saving throws',
+        scope: 'world',
+        config: true,
+        type: Boolean,
+        default: false
+    });
+
     // Auto-refill points on rest setting
     game.settings.register('rnk-mystix', 'autoRefillPoints', {
         name: 'Auto-Refill on Rest',
