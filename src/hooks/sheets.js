@@ -3,20 +3,25 @@
  * Displays point totals on all actor sheets: PC, NPC, familiar, vehicle/mount, hazard, loot
  */
 
-import { getAllActorPoints } from '../utils/storageUtils.js';
+import { getAllActorPoints, addActorPoints, deductActorPoints } from '../utils/storageUtils.js';
 
 /**
  * Resolve insertion target for any sheet type.
- * Appends inside the first <section> of the sheet <header> —
- * the same position used on PC sheets (header.char-header > section.char-details).
+ * PC sheets: insert after the hero-points .dots container (inside char-header > char-details).
+ * All others: append inside the first <section> of the sheet <header>.
  */
-function getInsertionTarget(element) {
-    const header = element.querySelector('header');
-    if (header) {
-        const section = header.querySelector('section');
-        if (section) return { target: section, method: 'append' };
-        return { target: header, method: 'append' };
+function getInsertionTarget(element, actorType) {
+    if (actorType === 'character') {
+        // PC: replace the native hero-points dots container with the RNK display
+        const heroPointsContainer = element.querySelector('.dots [data-resource="hero-points"]')?.closest('.dots');
+        if (heroPointsContainer) return { target: heroPointsContainer, method: 'replace' };
     }
+
+    // NPC / familiar / vehicle / hazard / loot — append into the rarity-size container
+    const raritySize = element.querySelector('.rarity-size');
+    if (raritySize) return { target: raritySize, method: 'append' };
+
+    // Fallback
     return { target: element, method: 'prepend' };
 }
 
@@ -29,13 +34,16 @@ export function setupCharacterSheetHooks() {
             const actor = app.actor;
             if (!actor) return;
 
-            // Get current points
-            const points = getAllActorPoints(actor);
-            if (!points) return;
-
             // Ensure we are working with a native DOM element
             const element = html instanceof HTMLElement ? html : html[0];
             if (!element) return;
+
+            // Get current points — hide display entirely when both are 0
+            const points = getAllActorPoints(actor);
+            if (!points || (points.heroPoints === 0 && points.mysticPoints === 0)) {
+                element.querySelector('.rnk-mystix-sheet-points')?.remove();
+                return;
+            }
 
             // Remove existing to prevent duplication on re-renders
             element.querySelector('.rnk-mystix-sheet-points')?.remove();
@@ -47,19 +55,48 @@ export function setupCharacterSheetHooks() {
             const pointsElement = template.content.firstChild;
 
             // Place the display in the correct position for this sheet type
-            const { target, method } = getInsertionTarget(element);
+            const { target, method } = getInsertionTarget(element, actor.type);
 
-            if (method === 'after') {
-                target.after(pointsElement);
+            if (method === 'replace') {
+                target.replaceWith(pointsElement);
             } else if (method === 'append') {
                 target.append(pointsElement);
             } else {
                 target.prepend(pointsElement);
             }
+
+            // GM only: left-click subtracts, right-click adds
+            if (game.user?.isGM) attachPointListeners(pointsElement, actor);
         } catch (error) {
             console.warn('RNK Mystix | Error enhancing actor sheet:', error);
         }
     });
+}
+
+/**
+ * Attach GM click listeners to the point display spans.
+ * Left-click: subtract 1 point. Right-click: add 1 point.
+ */
+function attachPointListeners(pointsElement, actor) {
+    const types = [
+        { selector: '.rnk-mystix-sheet-point.hero',   type: 'hero' },
+        { selector: '.rnk-mystix-sheet-point.mystic', type: 'mystic' }
+    ];
+
+    for (const { selector, type } of types) {
+        const span = pointsElement.querySelector(selector);
+        if (!span) continue;
+
+        span.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await deductActorPoints(actor, type, 1);
+        });
+
+        span.addEventListener('contextmenu', async (e) => {
+            e.preventDefault();
+            await addActorPoints(actor, type, 1);
+        });
+    }
 }
 
 /**
