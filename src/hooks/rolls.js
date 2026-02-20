@@ -29,11 +29,24 @@ export function initializeRollSystem() {
             // Skip rendering if both points are 0
             if (points.heroPoints === 0 && points.mysticPoints === 0) return;
 
-            // Create the points template data — M shows raw count (profBonus is added on reroll)
+            // Determine which buttons to show based on PF2e roll context.
+            // Mystic (Rewrite Fate): skill checks and saving throws only.
+            // Hero: any roll.
+            const rollType = message.flags?.pf2e?.context?.type ?? '';
+            const mysticEligible = ['skill-check', 'saving-throw'].includes(rollType);
+
+            const showHero = points.heroPoints > 0;
+            const showMystic = mysticEligible && points.mysticPoints > 0;
+
+            if (!showHero && !showMystic) return;
+
+            const level = actor.level ?? actor.system?.details?.level?.value ?? 0;
             const templateData = {
                 actorId: actor.id,
                 heroPoints: points.heroPoints,
-                mysticPoints: points.mysticPoints
+                mysticPoints: points.mysticPoints + getMysticProfBonus(level),
+                showHero,
+                showMystic
             };
 
             // renderTemplate is now namespaced in v13
@@ -131,11 +144,23 @@ async function handlePointReroll(actor, originalMessage, type) {
     const roll = originalMessage.rolls[0];
     if (!roll) return;
 
-    // Create a new roll — mystic rerolls include the proficiency bonus (10 + level)
-    const level = worldActor.level ?? worldActor.system?.details?.level?.value ?? 0;
-    const formula = type === 'mystic'
-        ? `${roll.formula} + ${getMysticProfBonus(level)}`
-        : roll.formula;
+    let formula = roll.formula;
+
+    if (type === 'mystic') {
+        const level = worldActor.level ?? worldActor.system?.details?.level?.value ?? 0;
+        const mysticProf = getMysticProfBonus(level); // 10 + level
+
+        // Rebuild the formula: mystic prof replaces original proficiency,
+        // keep all other modifiers (ability, item, status, circumstance, etc.)
+        const modifiers = originalMessage.flags?.pf2e?.modifiers ?? [];
+        const otherMods = modifiers
+            .filter(m => m.type !== 'proficiency' && m.enabled !== false && !m.ignored)
+            .reduce((sum, m) => sum + (m.modifier ?? 0), 0);
+
+        const total = mysticProf + otherMods;
+        formula = `1d20 + ${total}`;
+    }
+
     const newRoll = await new Roll(formula).roll();
 
     // Determine theme colors based on point type
