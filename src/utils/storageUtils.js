@@ -16,7 +16,9 @@ const MYSTIC_POINTS_FLAG = 'mysticPoints';
  */
 export async function setActorPoints(actor, type, value) {
     const flag = type === 'hero' ? HERO_POINTS_FLAG : MYSTIC_POINTS_FLAG;
-    await actor.setFlag(FLAG_NAMESPACE, flag, value);
+    const maxSetting = type === 'hero' ? 'maxHeroPoints' : 'maxMysticPoints';
+    const max = game.settings.get('rnk-mystix', maxSetting);
+    await actor.setFlag(FLAG_NAMESPACE, flag, Math.min(Math.max(0, value), max));
 }
 
 /**
@@ -81,7 +83,9 @@ export async function deductActorPoints(actor, type, amount) {
  */
 export async function addActorPoints(actor, type, amount) {
     const current = getActorPoints(actor, type);
-    const newValue = current + amount;
+    const maxSetting = type === 'hero' ? 'maxHeroPoints' : 'maxMysticPoints';
+    const max = game.settings.get('rnk-mystix', maxSetting);
+    const newValue = Math.min(current + amount, max);
     await setActorPoints(actor, type, newValue);
     return newValue;
 }
