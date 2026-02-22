@@ -66,8 +66,9 @@ export function setupCharacterSheetHooks() {
                 target.prepend(pointsElement);
             }
 
-            // GM only: left-click subtracts, right-click adds
-            if (game.user?.isGM) attachPointListeners(pointsElement, actor);
+            // GM always gets click controls; players get them if self-assign is enabled and they own the actor
+            const canModify = game.user?.isGM || (game.settings.get('rnk-mystix', 'playerSelfAssign') && actor.isOwner);
+            if (canModify) attachPointListeners(pointsElement, actor);
         } catch (error) {
             console.warn('RNK Mystix | Error enhancing actor sheet:', error);
         }

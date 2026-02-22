@@ -64,6 +64,16 @@ export function registerSettings() {
         default: false
     });
 
+    // Allow players to adjust their own points
+    game.settings.register('rnk-mystix', 'playerSelfAssign', {
+        name: 'Player Self-Assign Points',
+        hint: 'Allow players to add and remove points on their own characters via the sheet',
+        scope: 'world',
+        config: true,
+        type: Boolean,
+        default: false
+    });
+
     // Auto-refill points on rest setting
     game.settings.register('rnk-mystix', 'autoRefillPoints', {
         name: 'Auto-Refill on Rest',
