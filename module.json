@@ -1,13 +1,18 @@
 {
   "id": "rnk-mystix",
   "title": "RNK™ Mystix",
-  "description": "Assign and manage Hero Points and Mystic Points with synchronized roll bonuses. Points are totaled together for combined effect on all roll types.",
+  "description": "Assign and manage Hero Points and Mystic Points with synchronized roll bonuses. Points are totaled together for combined effect on all roll types. Premium module - support RNK on Patreon: https://www.patreon.com/RagNaroks",
   "authors": [
     {
-      "name": "Odinn (RNK Enterprise)"
+      "name": "Odinn",
+      "url": "https://www.patreon.com/RagNaroks"
+    },
+    {
+      "name": "RNK Enterprise",
+      "url": "https://github.com/RNK-Enterprise"
     }
   ],
-  "version": "1.0.11",
+  "version": "1.0.0",
   "compatibility": {
     "minimum": 13,
     "verified": 13
@@ -23,8 +28,10 @@
   ],
   "url": "https://github.com/RNK-Enterprise/rnk-mystix",
   "manifest": "https://github.com/RNK-Enterprise/rnk-mystix/releases/latest/download/module.json",
-  "download": "https://github.com/RNK-Enterprise/rnk-mystix/releases/latest/download/rnk-mystix.zip",
-  "protected": false,
+  "download": "https://github.com/RNK-Enterprise/rnk-mystix/releases/latest/download/module.zip",
+  "protected": true,
+  "license": "LICENSE",
+  "licenseURL": "https://github.com/RNK-Enterprise/rnk-mystix/blob/main/LICENSE",
   "relationships": {
     "systems": [
       {
