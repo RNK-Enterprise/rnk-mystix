@@ -1,6 +1,6 @@
 # RNK™ Mystix
 
-**Version**: 1.0.0  
+**Version**: 1.0.11  
 **Status**: Production Ready  
 **License**: RNK Proprietary  
 **Foundry VTT Compatibility**: v13+  
