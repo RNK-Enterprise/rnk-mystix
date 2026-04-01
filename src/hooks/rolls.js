@@ -10,7 +10,7 @@ import { getMysticProfBonus } from '../utils/pointUtils.js';
  * Initialize all roll hooks
  */
 export function initializeRollSystem() {
-    console.log('RNK Mystix | Initializing roll system...');
+    console.log('RNK™ Mystix | Initializing roll system...');
 
     // renderChatMessageHTML is the v13 API — passes HTMLElement directly (not jQuery)
     Hooks.on('renderChatMessageHTML', async (message, element, _data) => {
@@ -50,7 +50,11 @@ export function initializeRollSystem() {
                 heroPoints: points.heroPoints,
                 mysticPoints: points.mysticPoints,
                 showHero,
-                showMystic
+                showMystic,
+                heroTitle: game.i18n.localize('rnk-mystix.chat.heroTitle'),
+                mysticTitle: game.i18n.localize('rnk-mystix.chat.mysticTitle'),
+                heroLabel: game.i18n.localize('rnk-mystix.chat.heroLabel'),
+                mysticLabel: game.i18n.localize('rnk-mystix.chat.mysticLabel')
             };
 
             // renderTemplate is now namespaced in v13
@@ -72,7 +76,7 @@ export function initializeRollSystem() {
             // NOTE: No per-element listeners added here.
             // A single delegated listener on document (registered below) handles all clicks.
         } catch (error) {
-            console.error('RNK Mystix | Error rendering chat points:', error);
+            console.error('RNK™ Mystix | Error rendering chat points:', error);
         }
     });
 
@@ -100,7 +104,7 @@ export function initializeRollSystem() {
         const type = btn.dataset.type;
 
         if (!actor.isOwner) {
-            ui.notifications.warn('You do not own this character.');
+            ui.notifications.warn(game.i18n.localize('rnk-mystix.notifications.notOwner'));
             return;
         }
 
@@ -108,12 +112,16 @@ export function initializeRollSystem() {
         const pointValue = type === 'hero' ? currentPoints.heroPoints : currentPoints.mysticPoints;
 
         if (pointValue <= 0) {
-            ui.notifications.warn(`You have no ${type === 'hero' ? 'Hero' : 'Mystic'} Points left!`);
+            ui.notifications.warn(type === 'hero'
+                ? game.i18n.localize('rnk-mystix.notifications.noHeroPoints')
+                : game.i18n.localize('rnk-mystix.notifications.noMysticPoints'));
             return;
         }
 
         await deductActorPoints(actor, type, 1);
-        ui.notifications.info(`Spent 1 ${type === 'hero' ? 'Hero' : 'Mystic'} Point`);
+        ui.notifications.info(type === 'hero'
+            ? game.i18n.localize('rnk-mystix.notifications.heroSpent')
+            : game.i18n.localize('rnk-mystix.notifications.mysticSpent'));
 
         if (message.isRoll) {
             await handlePointReroll(actor, message, type);
@@ -124,16 +132,18 @@ export function initializeRollSystem() {
                 content: `
                     <div class="rnk-mystix-spend-msg">
                         <h3 style="color: ${type === 'hero' ? 'var(--mystix-hero-color)' : 'var(--mystix-mystic-color)'}">
-                            ${type === 'hero' ? 'Hero' : 'Mystic'} Point Spent!
+                            ${type === 'hero'
+                                ? game.i18n.localize('rnk-mystix.chat.heroSpentTitle')
+                                : game.i18n.localize('rnk-mystix.chat.mysticSpentTitle')}
                         </h3>
-                        <p>${actor.name} triggers a powerful effect!</p>
+                        <p>${game.i18n.format('rnk-mystix.chat.effectTrigger', { actor: actor.name })}</p>
                     </div>
                 `
             });
         }
     });
 
-    console.log('RNK Mystix | Roll system initialized');
+    console.log('RNK™ Mystix | Roll system initialized');
 }
 
 /**
@@ -176,7 +186,7 @@ async function handlePointReroll(actor, originalMessage, type) {
         speaker: ChatMessage.getSpeaker({ actor: worldActor }),
         flavor: `
             <div class="rnk-mystix-reroll-flavor" style="color: ${color}; font-weight: bold; border-bottom: 2px solid ${color}; padding-bottom: 2px;">
-                <i class="fas fa-dice-d20"></i> Spent ${label} to Reroll!
+                <i class="fas fa-dice-d20"></i> ${game.i18n.format('rnk-mystix.chat.rerollFlavor', { label })}
             </div>`,
         rolls: [newRoll],
         flags: {

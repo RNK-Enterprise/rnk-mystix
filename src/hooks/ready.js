@@ -22,7 +22,7 @@ export function openPointAssignmentHub() {
  * Module ready hook - Called when Foundry is ready
  */
 export async function onReady() {
-    console.log('RNK Mystix | Module ready');
+    console.log('RNK™ Mystix | Module ready');
 
     // Only run setup for GMs
     if (!game.user.isGM) {
@@ -32,7 +32,7 @@ export async function onReady() {
     // Validate actor data integrity
     const validation = validateActorFlags();
     if (validation.invalid > 0) {
-        console.warn(`RNK Mystix | Found ${validation.invalid} actors with invalid flags`);
+        console.warn(`RNK™ Mystix | Found ${validation.invalid} actors with invalid flags`);
         await migrateActorData();
     }
 
@@ -42,7 +42,7 @@ export async function onReady() {
         // The actual button will be handled through Foundry's scene control system
     }
 
-    console.log('RNK Mystix | Ready setup complete');
+    console.log('RNK™ Mystix | Ready setup complete');
 }
 
 /**
@@ -57,7 +57,7 @@ export function addHubButton() {
         const toolId = 'rnk-mystix-hub-open';
         const tool = {
             name: toolId,
-            title: 'RNK™ Mystix - GM Hub',
+            title: game.i18n.localize('rnk-mystix.hub.controlTitle'),
             icon: 'fas fa-scroll',
             button: true,
             toggle: false,
@@ -68,7 +68,7 @@ export function addHubButton() {
 
         const control = {
             name: 'rnk-mystix',
-            title: 'RNK™ Mystix',
+            title: game.i18n.localize('rnk-mystix.hub.moduleTitle'),
             icon: 'fas fa-scroll',
             layer: 'tokens',
             visible: true,

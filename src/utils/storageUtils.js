@@ -7,6 +7,14 @@ const FLAG_NAMESPACE = 'rnk-mystix';
 const HERO_POINTS_FLAG = 'heroPoints';
 const MYSTIC_POINTS_FLAG = 'mysticPoints';
 
+function clampPointValue(type, value) {
+    const maxSetting = type === 'hero' ? 'maxHeroPoints' : 'maxMysticPoints';
+    const max = game.settings.get('rnk-mystix', maxSetting);
+    const allowNegative = game.settings.get('rnk-mystix', 'allowNegativePoints');
+    const min = allowNegative ? -max : 0;
+    return Math.min(Math.max(min, Number(value) || 0), max);
+}
+
 /**
  * Set points on an actor flag
  * @param {Actor} actor - The actor to set points on
@@ -16,9 +24,7 @@ const MYSTIC_POINTS_FLAG = 'mysticPoints';
  */
 export async function setActorPoints(actor, type, value) {
     const flag = type === 'hero' ? HERO_POINTS_FLAG : MYSTIC_POINTS_FLAG;
-    const maxSetting = type === 'hero' ? 'maxHeroPoints' : 'maxMysticPoints';
-    const max = game.settings.get('rnk-mystix', maxSetting);
-    await actor.setFlag(FLAG_NAMESPACE, flag, Math.min(Math.max(0, value), max));
+    await actor.setFlag(FLAG_NAMESPACE, flag, clampPointValue(type, value));
 }
 
 /**
@@ -69,7 +75,7 @@ export async function clearActorPoints(actor, type = 'both') {
  */
 export async function deductActorPoints(actor, type, amount) {
     const current = getActorPoints(actor, type);
-    const newValue = Math.max(0, current - amount);
+    const newValue = clampPointValue(type, current - amount);
     await setActorPoints(actor, type, newValue);
     return newValue;
 }
@@ -83,9 +89,7 @@ export async function deductActorPoints(actor, type, amount) {
  */
 export async function addActorPoints(actor, type, amount) {
     const current = getActorPoints(actor, type);
-    const maxSetting = type === 'hero' ? 'maxHeroPoints' : 'maxMysticPoints';
-    const max = game.settings.get('rnk-mystix', maxSetting);
-    const newValue = Math.min(current + amount, max);
+    const newValue = clampPointValue(type, current + amount);
     await setActorPoints(actor, type, newValue);
     return newValue;
 }

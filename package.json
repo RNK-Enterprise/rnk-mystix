@@ -1,13 +1,12 @@
 {
   "name": "rnk-mystix",
-  "version": "1.0.0",
-  "description": "RNK Mystix - Hero Points and Mystic Points Management for Foundry VTT",
+  "version": "1.0.12",
+  "description": "RNK™ Mystix premium Patreon-gated point management for Pathfinder 2e on Foundry VTT.",
+  "type": "module",
   "main": "src/main.js",
   "scripts": {
-    "build": "npm run build:js && npm run build:css",
-    "build:js": "terser src/main.js -o src/main.min.js --compress --mangle --keep-classnames --keep-fnames",
-    "build:css": "cssnano styles/mystix.css -o styles/mystix.min.css",
-    "dev": "echo 'Development mode running'"
+    "test": "node scripts/validate.mjs",
+    "build": "node scripts/build-release.mjs"
   },
   "keywords": [
     "foundry",
@@ -18,10 +17,5 @@
     "rnk"
   ],
   "author": "Odinn (RNK Enterprise)",
-  "license": "RNK Proprietary License",
-  "devDependencies": {
-    "terser": "^5.31.1",
-    "cssnano": "^7.0.3",
-    "postcss-cli": "^11.0.0"
-  }
+  "license": "RNK Proprietary License"
 }

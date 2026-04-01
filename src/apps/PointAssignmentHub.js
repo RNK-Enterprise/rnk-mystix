@@ -9,7 +9,7 @@ import { setActorPoints, getActorPoints, clearActorPoints, resetAllActorPoints }
 
 const { HandlebarsApplicationMixin, ApplicationV2 } = foundry.applications.api;
 
-console.log('RNK Mystix | PointAssignmentHub.js V2 Loaded');
+console.log('RNK™ Mystix | PointAssignmentHub.js loaded');
 
 export class PointAssignmentHub extends HandlebarsApplicationMixin(ApplicationV2) {
     // ========== STATIC PROPERTIES ==========
@@ -38,6 +38,41 @@ export class PointAssignmentHub extends HandlebarsApplicationMixin(ApplicationV2
         super(options);
         this.searchQuery = '';
         this.selectedActorId = null;
+    }
+
+    get _i18n() {
+        return {
+            searchPlaceholder: game.i18n.localize('rnk-mystix.hub.search'),
+            resetAllTitle: game.i18n.localize('rnk-mystix.hub.resetAllTitle'),
+            resetAllLabel: game.i18n.localize('rnk-mystix.hub.resetAll'),
+            assignTitle: game.i18n.localize('rnk-mystix.hub.assignTitle'),
+            clearTitle: game.i18n.localize('rnk-mystix.hub.clearTitle'),
+            resetTitle: game.i18n.localize('rnk-mystix.hub.resetTitle'),
+            assign: game.i18n.localize('rnk-mystix.hub.assign'),
+            clear: game.i18n.localize('rnk-mystix.hub.clear'),
+            reset: game.i18n.localize('rnk-mystix.hub.reset'),
+            heroPoints: game.i18n.localize('rnk-mystix.hub.heroPoints'),
+            mysticPoints: game.i18n.localize('rnk-mystix.hub.mysticPoints'),
+            pcs: game.i18n.localize('rnk-mystix.hub.pcs'),
+            npcs: game.i18n.localize('rnk-mystix.hub.npcs'),
+            others: game.i18n.localize('rnk-mystix.hub.others'),
+            pointSystem: game.i18n.localize('rnk-mystix.hub.pointSystem'),
+            noSearchResults: game.i18n.localize('rnk-mystix.hub.noSearchResults'),
+            noActors: game.i18n.localize('rnk-mystix.hub.noActors'),
+            actorNotFound: game.i18n.localize('rnk-mystix.notifications.actorNotFound'),
+            assignSuccess: game.i18n.localize('rnk-mystix.notifications.assignSuccess'),
+            clearSuccess: game.i18n.localize('rnk-mystix.notifications.clearSuccess'),
+            resetSuccess: game.i18n.localize('rnk-mystix.notifications.resetSuccess'),
+            resetAllSuccess: game.i18n.localize('rnk-mystix.notifications.resetAllSuccess'),
+            assignFailed: game.i18n.localize('rnk-mystix.notifications.assignFailed'),
+            clearFailed: game.i18n.localize('rnk-mystix.notifications.clearFailed'),
+            resetFailed: game.i18n.localize('rnk-mystix.notifications.resetFailed'),
+            resetAllFailed: game.i18n.localize('rnk-mystix.notifications.resetAllFailed'),
+            confirmResetAllTitle: game.i18n.localize('rnk-mystix.dialogs.resetAll.title'),
+            confirmResetAllContent: game.i18n.localize('rnk-mystix.dialogs.resetAll.content'),
+            confirmResetAllLabel: game.i18n.localize('rnk-mystix.dialogs.resetAll.confirm'),
+            cancel: game.i18n.localize('rnk-mystix.common.cancel')
+        };
     }
 
     // ========== DATA PREPARATION ==========
@@ -98,6 +133,7 @@ export class PointAssignmentHub extends HandlebarsApplicationMixin(ApplicationV2
         return {
             searchQuery: this.searchQuery,
             hasActors,
+            i18n: this._i18n,
             ...actorsData
         };
     }
@@ -162,7 +198,7 @@ export class PointAssignmentHub extends HandlebarsApplicationMixin(ApplicationV2
         const actor = game.actors.get(actorId);
 
         if (!actor) {
-            ui.notifications.error('Actor not found');
+            ui.notifications.error(this._i18n.actorNotFound);
             return;
         }
 
@@ -170,17 +206,17 @@ export class PointAssignmentHub extends HandlebarsApplicationMixin(ApplicationV2
         const heroInput = row.querySelector('.rnk-mystix-hero-input');
         const mysticInput = row.querySelector('.rnk-mystix-mystic-input');
 
-        const heroPoints = Math.max(0, parseInt(heroInput.value) || 0);
-        const mysticPoints = Math.max(0, parseInt(mysticInput.value) || 0);
+        const heroPoints = parseInt(heroInput.value) || 0;
+        const mysticPoints = parseInt(mysticInput.value) || 0;
 
         try {
             await setActorPoints(actor, 'hero', heroPoints);
             await setActorPoints(actor, 'mystic', mysticPoints);
-            ui.notifications.info(`Points assigned to ${actor.name}`);
+            ui.notifications.info(game.i18n.format('rnk-mystix.notifications.assignSuccessActor', { actor: actor.name }));
             this.render({ force: true });
         } catch (error) {
-            console.error('RNK Mystix | Error assigning points:', error);
-            ui.notifications.error('Error assigning points');
+            console.error('RNK™ Mystix | Error assigning points:', error);
+            ui.notifications.error(this._i18n.assignFailed);
         }
     }
 
@@ -198,10 +234,11 @@ export class PointAssignmentHub extends HandlebarsApplicationMixin(ApplicationV2
 
         try {
             await clearActorPoints(actor, 'both');
-            ui.notifications.info(`Points cleared for ${actor.name}`);
+            ui.notifications.info(game.i18n.format('rnk-mystix.notifications.clearSuccessActor', { actor: actor.name }));
             this.render({ force: true });
         } catch (error) {
-            console.error('RNK Mystix | Error clearing points:', error);
+            console.error('RNK™ Mystix | Error clearing points:', error);
+            ui.notifications.error(this._i18n.clearFailed);
         }
     }
 
@@ -223,10 +260,11 @@ export class PointAssignmentHub extends HandlebarsApplicationMixin(ApplicationV2
         try {
             await setActorPoints(actor, 'hero', defaultHero);
             await setActorPoints(actor, 'mystic', defaultMystic);
-            ui.notifications.info(`Points reset for ${actor.name}`);
+            ui.notifications.info(game.i18n.format('rnk-mystix.notifications.resetSuccessActor', { actor: actor.name }));
             this.render({ force: true });
         } catch (error) {
-            console.error('RNK Mystix | Error resetting points:', error);
+            console.error('RNK™ Mystix | Error resetting points:', error);
+            ui.notifications.error(this._i18n.resetFailed);
         }
     }
 
@@ -237,25 +275,26 @@ export class PointAssignmentHub extends HandlebarsApplicationMixin(ApplicationV2
         event.preventDefault();
 
         const dialog = new Dialog({
-            title: 'Reset All Points',
-            content: '<p>Are you sure you want to reset all points for all actors?</p>',
+            title: this._i18n.confirmResetAllTitle,
+            content: `<p>${this._i18n.confirmResetAllContent}</p>`,
             buttons: {
                 confirm: {
                     icon: '<i class="fas fa-check"></i>',
-                    label: 'Reset All',
+                    label: this._i18n.confirmResetAllLabel,
                     callback: async () => {
                         try {
                             await resetAllActorPoints();
-                            ui.notifications.info('All actor points reset');
+                            ui.notifications.info(this._i18n.resetAllSuccess);
                             this.render({ force: true });
                         } catch (error) {
-                            console.error('RNK Mystix | Error resetting all points:', error);
+                            console.error('RNK™ Mystix | Error resetting all points:', error);
+                            ui.notifications.error(this._i18n.resetAllFailed);
                         }
                     }
                 },
                 cancel: {
                     icon: '<i class="fas fa-times"></i>',
-                    label: 'Cancel'
+                    label: this._i18n.cancel
                 }
             },
             default: 'cancel'

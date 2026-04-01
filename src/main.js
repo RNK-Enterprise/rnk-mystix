@@ -8,7 +8,7 @@ import { onReady, addHubButton } from './hooks/ready.js';
 import { initializeRollSystem } from './hooks/rolls.js';
 import { initializeCharacterSheets } from './hooks/sheets.js';
 
-console.log('RNK Mystix | Loading module...');
+console.log('RNK™ Mystix | Loading module...');
 
 /**
  * RNK Proprietary Integrity Check
@@ -16,13 +16,13 @@ console.log('RNK Mystix | Loading module...');
  */
 const verifyIntegrity = () => {
     // Current simple verification for dev environment
-    return true; 
+    return true;
 };
 
 // Initialize when game is initializing
 Hooks.once('init', () => {
     if (!verifyIntegrity()) {
-        console.error('RNK Mystix | Integrity check failed. Module disabled.');
+        console.error('RNK™ Mystix | Integrity check failed. Module disabled.');
         return;
     }
     onInit();
@@ -39,7 +39,7 @@ Hooks.once('ready', async () => {
 
 // Cleanup on world unload
 Hooks.once('canvasReady', () => {
-    console.log('RNK Mystix | Canvas ready - module fully initialized');
+    console.log('RNK™ Mystix | Canvas ready - module fully initialized');
 });
 
 export { PointAssignmentHub } from './apps/PointAssignmentHub.js';

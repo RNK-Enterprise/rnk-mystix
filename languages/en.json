@@ -1,6 +1,6 @@
 {
   "rnk-mystix": {
-    "name": "RNK Mystix",
+    "name": "RNK™ Mystix",
     "description": "Hero Points and Mystic Points Management",
     "settings": {
       "maxHeroPoints": {
@@ -23,13 +23,24 @@
         "name": "Allow Negative Points",
         "hint": "Allow actors to have negative point values (debt system)"
       },
+      "mysticAttackRerolls": {
+        "name": "Mystic Attack Rerolls",
+        "hint": "Allow Mystic Points to reroll attack rolls in addition to skill checks and saving throws"
+      },
+      "playerSelfAssign": {
+        "name": "Player Self-Assign Points",
+        "hint": "Allow players to add and remove points on their own characters from the sheet"
+      },
       "autoRefillPoints": {
         "name": "Auto-Refill on Rest",
         "hint": "Automatically reset points when actors rest"
       }
     },
     "hub": {
-      "title": "RNK Mystix - Point Assignment",
+      "title": "RNK™ Mystix - Point Assignment",
+      "moduleTitle": "RNK™ Mystix",
+      "controlTitle": "RNK™ Mystix - GM Hub",
+      "pointSystem": "Point Assignment System",
       "search": "Search actors by name...",
       "heroPoints": "Hero Points",
       "mysticPoints": "Mystic Points",
@@ -37,14 +48,59 @@
       "clear": "Clear",
       "reset": "Reset",
       "resetAll": "Reset All Points",
+      "resetAllTitle": "Reset all points for all actors",
+      "assignTitle": "Assign points",
+      "clearTitle": "Clear all points",
+      "resetTitle": "Reset to defaults",
       "pcs": "Player Characters",
       "npcs": "NPCs",
       "mystics": "Mystics",
-      "noActors": "No actors found",
+      "others": "Others",
+      "noActors": "No actors in the world",
+      "noSearchResults": "No actors found matching your search",
       "pointsAssigned": "Points assigned successfully",
       "pointsCleared": "Points cleared",
       "pointsReset": "Points reset",
       "allPointsReset": "All points reset"
+    },
+    "chat": {
+      "heroTitle": "Spend 1 Hero Point to reroll",
+      "mysticTitle": "Spend 1 Mystic Point to reroll",
+      "heroLabel": "H:",
+      "mysticLabel": "M:",
+      "heroSpentTitle": "Hero Point Spent",
+      "mysticSpentTitle": "Mystic Point Spent",
+      "effectTrigger": "{actor} triggers a powerful effect!",
+      "rerollFlavor": "Spent {label} to reroll"
+    },
+    "dialogs": {
+      "resetAll": {
+        "title": "Reset All Points",
+        "content": "Are you sure you want to reset all points for all actors?",
+        "confirm": "Reset All"
+      }
+    },
+    "common": {
+      "cancel": "Cancel"
+    },
+    "notifications": {
+      "actorNotFound": "Actor not found.",
+      "assignSuccess": "Points assigned successfully.",
+      "assignSuccessActor": "Points assigned to {actor}.",
+      "clearSuccess": "Points cleared.",
+      "clearSuccessActor": "Points cleared for {actor}.",
+      "resetSuccess": "Points reset.",
+      "resetSuccessActor": "Points reset for {actor}.",
+      "resetAllSuccess": "All actor points reset.",
+      "assignFailed": "Error assigning points.",
+      "clearFailed": "Error clearing points.",
+      "resetFailed": "Error resetting points.",
+      "resetAllFailed": "Error resetting all points.",
+      "notOwner": "You do not own this character.",
+      "noHeroPoints": "You have no Hero Points left.",
+      "noMysticPoints": "You have no Mystic Points left.",
+      "heroSpent": "Spent 1 Hero Point.",
+      "mysticSpent": "Spent 1 Mystic Point."
     },
     "rolls": {
       "heroBonus": "Hero Point Bonus",

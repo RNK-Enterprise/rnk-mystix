@@ -1,12 +1,12 @@
 <div class="rnk-mystix-chat-points" data-actor-id="{{actorId}}">
     {{#if showHero}}
-    <button class="rnk-mystix-chat-roll-btn hero" data-type="hero" title="Spend 1 Hero Point to Reroll">
-        <span class="label">H:</span> <span class="value">{{heroPoints}}</span>
+    <button class="rnk-mystix-chat-roll-btn hero" data-type="hero" title="{{heroTitle}}">
+        <span class="label">{{heroLabel}}</span> <span class="value">{{heroPoints}}</span>
     </button>
     {{/if}}
     {{#if showMystic}}
-    <button class="rnk-mystix-chat-roll-btn mystic" data-type="mystic" title="Spend 1 Mystic Point — Rewrite Fate">
-        <span class="label">M:</span> <span class="value">{{mysticPoints}}</span>
+    <button class="rnk-mystix-chat-roll-btn mystic" data-type="mystic" title="{{mysticTitle}}">
+        <span class="label">{{mysticLabel}}</span> <span class="value">{{mysticPoints}}</span>
     </button>
     {{/if}}
 </div>

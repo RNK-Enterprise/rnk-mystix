@@ -1,15 +1,15 @@
 <div class="rnk-mystix-hub-wrapper">
     <div class="rnk-mystix-header">
-        <h2>RNK Mystix</h2>
-        <p>Point Assignment System</p>
+        <h2>RNK™ Mystix</h2>
+        <p>{{i18n.pointSystem}}</p>
     </div>
 
     <div class="rnk-mystix-controls">
         <div class="rnk-mystix-search-box">
-            <input type="text" class="rnk-mystix-search" placeholder="Search actors..." value="{{searchQuery}}">
+            <input type="text" class="rnk-mystix-search" placeholder="{{i18n.searchPlaceholder}}" value="{{searchQuery}}">
         </div>
-        <button class="rnk-mystix-reset-all-btn" title="Reset all points for all actors">
-            <i class="fas fa-redo"></i> Reset All
+        <button class="rnk-mystix-reset-all-btn" title="{{i18n.resetAllTitle}}">
+            <i class="fas fa-redo"></i> {{i18n.resetAllLabel}}
         </button>
     </div>
 
@@ -27,24 +27,24 @@
 
                             <div class="rnk-mystix-point-inputs">
                                 <div class="rnk-mystix-point-group hero">
-                                    <label>Hero</label>
-                                    <input type="number" class="rnk-mystix-hero-input" value="{{actor.heroPoints}}" min="0">
+                                    <label>{{i18n.heroPoints}}</label>
+                                    <input type="number" class="rnk-mystix-hero-input" value="{{actor.heroPoints}}">
                                 </div>
                                 <div class="rnk-mystix-point-group mystic">
-                                    <label>Mystic</label>
-                                    <input type="number" class="rnk-mystix-mystic-input" value="{{actor.mysticPoints}}" min="0">
+                                    <label>{{i18n.mysticPoints}}</label>
+                                    <input type="number" class="rnk-mystix-mystic-input" value="{{actor.mysticPoints}}">
                                 </div>
                             </div>
 
                             <div class="rnk-mystix-actions">
-                                <button class="rnk-mystix-assign-btn" title="Assign points">Assign</button>
-                                <button class="rnk-mystix-clear-btn" title="Clear all points">Clear</button>
-                                <button class="rnk-mystix-reset-btn" title="Reset to defaults">Reset</button>
+                                <button class="rnk-mystix-assign-btn" title="{{i18n.assignTitle}}">{{i18n.assign}}</button>
+                                <button class="rnk-mystix-clear-btn" title="{{i18n.clearTitle}}">{{i18n.clear}}</button>
+                                <button class="rnk-mystix-reset-btn" title="{{i18n.resetTitle}}">{{i18n.reset}}</button>
                             </div>
                         </div>
                     {{~/each}}
                 {{else}}
-                    <div class="rnk-mystix-no-results">No actors found matching your search</div>
+                    <div class="rnk-mystix-no-results">{{i18n.noSearchResults}}</div>
                 {{/if}}
             </div>
         {{else}}
@@ -52,7 +52,7 @@
             <div class="rnk-mystix-actors-grouped">
                 {{#if pcs.length}}
                     <div class="rnk-mystix-group">
-                        <h3 class="rnk-mystix-group-header">Player Characters</h3>
+                        <h3 class="rnk-mystix-group-header">{{i18n.pcs}}</h3>
                         {{#each pcs as |actor| ~}}
                             <div class="rnk-mystix-actor-row" data-actor-id="{{actor.id}}">
                                 <div class="rnk-mystix-actor-info">
@@ -61,19 +61,19 @@
 
                                 <div class="rnk-mystix-point-inputs">
                                     <div class="rnk-mystix-point-group hero">
-                                        <label>Hero</label>
-                                        <input type="number" class="rnk-mystix-hero-input" value="{{actor.heroPoints}}" min="0">
+                                        <label>{{i18n.heroPoints}}</label>
+                                        <input type="number" class="rnk-mystix-hero-input" value="{{actor.heroPoints}}">
                                     </div>
                                     <div class="rnk-mystix-point-group mystic">
-                                        <label>Mystic</label>
-                                        <input type="number" class="rnk-mystix-mystic-input" value="{{actor.mysticPoints}}" min="0">
+                                        <label>{{i18n.mysticPoints}}</label>
+                                        <input type="number" class="rnk-mystix-mystic-input" value="{{actor.mysticPoints}}">
                                     </div>
                                 </div>
 
                                 <div class="rnk-mystix-actions">
-                                    <button class="rnk-mystix-assign-btn" title="Assign points">Assign</button>
-                                    <button class="rnk-mystix-clear-btn" title="Clear">Clear</button>
-                                    <button class="rnk-mystix-reset-btn" title="Reset">Reset</button>
+                                    <button class="rnk-mystix-assign-btn" title="{{i18n.assignTitle}}">{{i18n.assign}}</button>
+                                    <button class="rnk-mystix-clear-btn" title="{{i18n.clearTitle}}">{{i18n.clear}}</button>
+                                    <button class="rnk-mystix-reset-btn" title="{{i18n.resetTitle}}">{{i18n.reset}}</button>
                                 </div>
                             </div>
                         {{~/each}}
@@ -82,7 +82,7 @@
 
                 {{#if npcs.length}}
                     <div class="rnk-mystix-group">
-                        <h3 class="rnk-mystix-group-header">NPCs</h3>
+                        <h3 class="rnk-mystix-group-header">{{i18n.npcs}}</h3>
                         {{#each npcs as |actor| ~}}
                             <div class="rnk-mystix-actor-row" data-actor-id="{{actor.id}}">
                                 <div class="rnk-mystix-actor-info">
@@ -91,19 +91,19 @@
 
                                 <div class="rnk-mystix-point-inputs">
                                     <div class="rnk-mystix-point-group hero">
-                                        <label>Hero</label>
-                                        <input type="number" class="rnk-mystix-hero-input" value="{{actor.heroPoints}}" min="0">
+                                        <label>{{i18n.heroPoints}}</label>
+                                        <input type="number" class="rnk-mystix-hero-input" value="{{actor.heroPoints}}">
                                     </div>
                                     <div class="rnk-mystix-point-group mystic">
-                                        <label>Mystic</label>
-                                        <input type="number" class="rnk-mystix-mystic-input" value="{{actor.mysticPoints}}" min="0">
+                                        <label>{{i18n.mysticPoints}}</label>
+                                        <input type="number" class="rnk-mystix-mystic-input" value="{{actor.mysticPoints}}">
                                     </div>
                                 </div>
 
                                 <div class="rnk-mystix-actions">
-                                    <button class="rnk-mystix-assign-btn" title="Assign points">Assign</button>
-                                    <button class="rnk-mystix-clear-btn" title="Clear">Clear</button>
-                                    <button class="rnk-mystix-reset-btn" title="Reset">Reset</button>
+                                    <button class="rnk-mystix-assign-btn" title="{{i18n.assignTitle}}">{{i18n.assign}}</button>
+                                    <button class="rnk-mystix-clear-btn" title="{{i18n.clearTitle}}">{{i18n.clear}}</button>
+                                    <button class="rnk-mystix-reset-btn" title="{{i18n.resetTitle}}">{{i18n.reset}}</button>
                                 </div>
                             </div>
                         {{~/each}}
@@ -112,7 +112,7 @@
 
                 {{#if mystics.length}}
                     <div class="rnk-mystix-group">
-                        <h3 class="rnk-mystix-group-header">Others</h3>
+                        <h3 class="rnk-mystix-group-header">{{i18n.others}}</h3>
                         {{#each mystics as |actor| ~}}
                             <div class="rnk-mystix-actor-row" data-actor-id="{{actor.id}}">
                                 <div class="rnk-mystix-actor-info">
@@ -121,19 +121,19 @@
 
                                 <div class="rnk-mystix-point-inputs">
                                     <div class="rnk-mystix-point-group hero">
-                                        <label>Hero</label>
-                                        <input type="number" class="rnk-mystix-hero-input" value="{{actor.heroPoints}}" min="0">
+                                        <label>{{i18n.heroPoints}}</label>
+                                        <input type="number" class="rnk-mystix-hero-input" value="{{actor.heroPoints}}">
                                     </div>
                                     <div class="rnk-mystix-point-group mystic">
-                                        <label>Mystic</label>
-                                        <input type="number" class="rnk-mystix-mystic-input" value="{{actor.mysticPoints}}" min="0">
+                                        <label>{{i18n.mysticPoints}}</label>
+                                        <input type="number" class="rnk-mystix-mystic-input" value="{{actor.mysticPoints}}">
                                     </div>
                                 </div>
 
                                 <div class="rnk-mystix-actions">
-                                    <button class="rnk-mystix-assign-btn" title="Assign points">Assign</button>
-                                    <button class="rnk-mystix-clear-btn" title="Clear">Clear</button>
-                                    <button class="rnk-mystix-reset-btn" title="Reset">Reset</button>
+                                    <button class="rnk-mystix-assign-btn" title="{{i18n.assignTitle}}">{{i18n.assign}}</button>
+                                    <button class="rnk-mystix-clear-btn" title="{{i18n.clearTitle}}">{{i18n.clear}}</button>
+                                    <button class="rnk-mystix-reset-btn" title="{{i18n.resetTitle}}">{{i18n.reset}}</button>
                                 </div>
                             </div>
                         {{~/each}}
@@ -141,7 +141,7 @@
                 {{/if}}
 
                 {{#unless hasActors}}
-                    <div class="rnk-mystix-no-results">No actors in the world</div>
+                    <div class="rnk-mystix-no-results">{{i18n.noActors}}</div>
                 {{~/unless}}
             </div>
         {{/if}}
