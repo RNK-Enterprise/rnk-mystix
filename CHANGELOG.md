@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.13 - 2026-04-15
+
+- Verified compatibility against Foundry VTT v14 while maintaining support for v13+.
+- Updated premium manifest and documentation to reflect verified v14 compatibility.
+
 ## 1.0.12 - 2026-03-31
 
 - aligned premium Patreon-gated manifest metadata with the actual repository and release asset URLs

@@ -1,8 +1,8 @@
 # RNK™ Mystix
 
-**Version**: 1.0.12  
+**Version**: 1.0.13  
 **License**: RNK Proprietary License  
-**Foundry Compatibility**: v13  
+**Foundry Compatibility**: v13+ (verified v14)  
 **System**: Pathfinder 2e  
 **Distribution**: Premium Patreon-gated module
 

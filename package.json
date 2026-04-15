@@ -1,6 +1,6 @@
 {
   "name": "rnk-mystix",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "RNK™ Mystix premium Patreon-gated point management for Pathfinder 2e on Foundry VTT.",
   "type": "module",
   "main": "src/main.js",
